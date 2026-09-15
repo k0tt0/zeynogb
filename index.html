@@ -105,7 +105,7 @@
 <button id="skip-btn" type="button" tabindex="-1" aria-hidden="true"></button>
 <script>
   document.getElementById('lock-name').textContent = HER_NAME;
-  document.getElementById('hero-name').textContent = "Alles Liebe zum Geburtstag, " + HER_NAME;
+  document.getElementById('hero-name').textContent = "zum Geburtstag, " + HER_NAME;
   const input=document.getElementById('code-input'); const btn=document.getElementById('unlock-btn'); const errorEl=document.getElementById('lock-error'); const lock=document.getElementById('lock'); const card=document.querySelector('.lock-card'); const burstLayer=document.getElementById('burst'); const starsLayer=document.getElementById('stars'); const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const STAR_COUNT=18; for(let i=0;i<STAR_COUNT;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';s.style.animationDuration=3+Math.random()*3+'s';starsLayer.appendChild(s);}
   function heartBurst(){if(reduceMotion)return;for(let i=0;i<16;i++){const h=document.createElement('div');h.className='burst-heart';h.textContent=Math.random()>.5?'♥':'❤';h.style.left=Math.random()*100+'%';h.style.color=Math.random()>.5?'#c9a46a':'#e3a0a4';h.style.animationDelay=Math.random()*.9+'s';h.style.fontSize=16+Math.random()*18+'px';burstLayer.appendChild(h);setTimeout(()=>h.remove(),4200);}}
