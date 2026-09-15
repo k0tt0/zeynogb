@@ -98,7 +98,7 @@
 <div id="content">
 <div class="hero reveal"><p class="eyebrow">Alles Liebe</p><h1 id="hero-name">Happy Birthday</h1><p>Es gibt so viele Dinge, die ich dir sagen möchte, also fange ich einfach hier an. Diese kleine Seite gehört ganz dir – für heute und für jeden Tag danach.</p></div>
 <section class="reveal"><h2>Ein paar Momente</h2><div class="timeline"><div class="moment"><p class="when">Der Anfang</p><p>[Hier deine Anekdote einfügen – z.B. wie ihr euch kennengelernt habt]</p></div><div class="moment"><p class="when">Ein Lieblingsmoment</p><p>[Hier deine Anekdote einfügen – ein Ausflug, ein Abend, ein Lachen]</p></div><div class="moment"><p class="when">Heute</p><p>[Hier deine Anekdote einfügen – warum dieser Tag besonders ist]</p></div></div></section>
-<section class="reveal"><h2>Ein paar Fotos von uns</h2><div class="photo-grid"><div class="photo-slot">Foto hier einfügen</div><div class="photo-slot">Foto hier einfügen</div><div class="photo-slot wide">Foto hier einfügen</div></div></section>
+<section class="reveal"><h2>Ein paar Fotos von uns</h2><div class="photo-grid"><div class="photo-slot" style="background-image:url('fotos/foto1.jpg')">Foto hier einfügen</div><div class="photo-slot" style="background-image:url('fotos/foto2.jpg')">Foto hier einfügen</div><div class="photo-slot wide" style="background-image:url('fotos/foto3.jpg')">Foto hier einfügen</div></div></section>
 <div class="closing reveal"><p>[Hier deine persönliche Nachricht einfügen – so lang oder kurz du möchtest]</p><p class="signature">Alles Liebe</p><button id="secret-toggle">Tippe für eine geheime Nachricht</button><div id="secret-message"><p>[Hier eine zweite, ganz private Nachricht einfügen – etwas, das nur ihr zwei versteht]</p></div></div>
 <p class="hint reveal">Tipp: Tippe unten in Safari auf „Teilen" → „Zum Home-Bildschirm", damit die Seite wie eine eigene App aussieht.</p>
 </div>
@@ -110,7 +110,7 @@
   const STAR_COUNT=18; for(let i=0;i<STAR_COUNT;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';s.style.animationDuration=3+Math.random()*3+'s';starsLayer.appendChild(s);}
   function heartBurst(){if(reduceMotion)return;for(let i=0;i<16;i++){const h=document.createElement('div');h.className='burst-heart';h.textContent=Math.random()>.5?'♥':'❤';h.style.left=Math.random()*100+'%';h.style.color=Math.random()>.5?'#c9a46a':'#e3a0a4';h.style.animationDelay=Math.random()*.9+'s';h.style.fontSize=16+Math.random()*18+'px';burstLayer.appendChild(h);setTimeout(()=>h.remove(),4200);}}
 
-  const countdown=document.getElementById('countdown'); const countdownLabel=document.getElementById('countdown-label'); const countdownHours=document.getElementById('countdown-hours'); const countdownMinutes=document.getElementById('countdown-minutes'); const countdownSeconds=document.getElementById('countdown-seconds');
+  const countdown=document.getElementById('countdown'); const countdownLabel=document.getElementById('countdown-label'); const countdownDaysUnit=document.getElementById('countdown-days-unit'); const countdownDaysSep=document.getElementById('countdown-days-sep'); const countdownDays=document.getElementById('countdown-days'); const countdownHours=document.getElementById('countdown-hours'); const countdownMinutes=document.getElementById('countdown-minutes'); const countdownSeconds=document.getElementById('countdown-seconds'); const gate=document.getElementById('gate'); const riddle=document.getElementById('riddle');
 
   // LOCAL TEST ONLY: 3x Z within 1.5s starts a 3-second countdown.
   // Nothing is saved and the real birthday time remains unchanged.
@@ -129,15 +129,31 @@
   });
 
   function updateCountdown(){
-    const now=new Date(); let remaining;
+    let remaining;
     if(testCountdownTarget!==null){
       remaining=Math.max(0,testCountdownTarget-Date.now());
     }else{
-      const target=new Date(now); target.setHours(24,0,0,0); remaining=Math.max(0,target.getTime()-now.getTime());
+      remaining=Math.max(0,UNLOCK_AT.getTime()-Date.now());
     }
-    const totalSeconds=Math.ceil(remaining/1000); const hours=Math.floor(totalSeconds/3600); const minutes=Math.floor((totalSeconds%3600)/60); const seconds=totalSeconds%60;
+    const totalSeconds=Math.ceil(remaining/1000);
+    const days=Math.floor(totalSeconds/86400);
+    const hours=Math.floor((totalSeconds%86400)/3600);
+    const minutes=Math.floor((totalSeconds%3600)/60);
+    const seconds=totalSeconds%60;
+    if(days>0){countdownDaysUnit.hidden=false;countdownDaysSep.hidden=false;countdownDays.textContent=days;}
+    else{countdownDaysUnit.hidden=true;countdownDaysSep.hidden=true;}
     countdownHours.textContent=String(hours).padStart(2,'0'); countdownMinutes.textContent=String(minutes).padStart(2,'0'); countdownSeconds.textContent=String(seconds).padStart(2,'0');
-    if(remaining===0){countdown.classList.add('finished');countdownLabel.textContent='Jetzt ist es soweit ♥';input.disabled=false;btn.disabled=false;if(testCountdownTarget!==null)testCountdownTarget=null;input.focus();return true;}
+    if(remaining===0){
+      countdown.classList.add('finished');
+      gate.classList.add('finished');
+      countdown.hidden=true;
+      riddle.hidden=false;
+      input.placeholder='Antwort';
+      input.disabled=false;btn.disabled=false;
+      if(testCountdownTarget!==null)testCountdownTarget=null;
+      input.focus();
+      return true;
+    }
     countdown.classList.remove('finished'); return false;
   }
   function countdownTick(){countdown.classList.add('tick');setTimeout(()=>countdown.classList.remove('tick'),220);}
